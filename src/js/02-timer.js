@@ -2,8 +2,14 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
 const startBtn = document.querySelector('button[data-start]');
-const nowTime = new Date().getTime();
+const daysElem = document.querySelector('.value[data-days]');
+const hoursElem = document.querySelector('.value[data-hours]');
+const minutesElem = document.querySelector('.value[data-minutes]');
+const secondsElem = document.querySelector('.value[data-seconds]');
+
 let difference = 0;
+let countDown = null;
+let finishTimeCount;
 
 const options = {
   enableTime: true,
@@ -11,27 +17,35 @@ const options = {
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-    difference = (selectedDates[0].getTime() - nowTime);
-    console.log(difference); // delete
+    finishTimeCount = selectedDates[0].getTime();
+    console.log(selectedDates[0].getTime());
   },
 };
 
-startBtn.addEventListener('click', onStartCouter)
+flatpickr('#datetime-picker', options);
+
+startBtn.addEventListener('click', onStartCouter);
 
 function onStartCouter() {
-  couter();
+  countDown = setInterval(updateCountValue, 1000);
 }
 
-function couter() {
-  let countDown = setInterval(console.log(convertMs(difference)), 1000);
+function updateCountValue() {
+  const nowTime = new Date().getTime();
+  difference = (finishTimeCount - nowTime);
+  if (difference < 0) {
+    clearInterval(countDown);
+    console.log('FINISH');
+  };
 
-  if (difference) clearInterval(countDown)
+  console.log(difference);
+
+  daysElem.textContent = convertMs(difference).days;
+  hoursElem.textContent = convertMs(difference).hours;
+  minutesElem.textContent = convertMs(difference).minutes;
+  secondsElem.textContent = convertMs(difference).seconds;
 
 }
-
-console.log(difference); //delete
-
-flatpickr('#datetime-picker', options);
 
 function convertMs(ms) {
   // Number of milliseconds per unit of time
@@ -51,6 +65,3 @@ function convertMs(ms) {
 
   return { days, hours, minutes, seconds };
 }
-
-
-
