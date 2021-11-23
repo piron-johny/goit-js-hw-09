@@ -28,6 +28,7 @@ input {
 }
 button {
   padding: 6px;
+  cursor: pointer;
 }
 
 .timer {
@@ -48,5 +49,6 @@ button {
 
 .value {
   text-align: center;
-  font-size: 30px;
+  font-size: 40px;
+  font-weight: 700;
 }

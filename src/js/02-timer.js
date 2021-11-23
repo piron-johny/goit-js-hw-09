@@ -1,4 +1,5 @@
 import flatpickr from 'flatpickr';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import 'flatpickr/dist/flatpickr.min.css';
 
 const startBtn = document.querySelector('button[data-start]');
@@ -9,7 +10,7 @@ const secondsElem = document.querySelector('.value[data-seconds]');
 
 let difference = 0;
 let countDown = null;
-let finishTimeCount;
+let finishTimeCount = 0;
 
 const options = {
   enableTime: true,
@@ -18,7 +19,12 @@ const options = {
   minuteIncrement: 1,
   onClose(selectedDates) {
     finishTimeCount = selectedDates[0].getTime();
-    console.log(selectedDates[0].getTime());
+    startBtn.disabled = false;
+
+    if (finishTimeCount < Date.now()) {
+      startBtn.setAttribute('disabled', true);
+      Notify.failure('You have chosen the past!');
+    }
   },
 };
 
@@ -32,19 +38,20 @@ function onStartCouter() {
 
 function updateCountValue() {
   const nowTime = new Date().getTime();
-  difference = (finishTimeCount - nowTime);
+  difference = finishTimeCount - nowTime;
+
   if (difference < 0) {
+    Notify.success('The time is up!');
+    startBtn.setAttribute('disabled', true);
     clearInterval(countDown);
-    console.log('FINISH');
-  };
+    return;
+  }
+  const { days, hours, minutes, seconds } = convertMs(difference);
 
-  console.log(difference);
-
-  daysElem.textContent = convertMs(difference).days;
-  hoursElem.textContent = convertMs(difference).hours;
-  minutesElem.textContent = convertMs(difference).minutes;
-  secondsElem.textContent = convertMs(difference).seconds;
-
+  daysElem.textContent = addLeadingZero(days);
+  hoursElem.textContent = addLeadingZero(hours);
+  minutesElem.textContent = addLeadingZero(minutes);
+  secondsElem.textContent = addLeadingZero(seconds);
 }
 
 function convertMs(ms) {
@@ -64,4 +71,8 @@ function convertMs(ms) {
   const seconds = Math.floor((((ms % day) % hour) % minute) / second);
 
   return { days, hours, minutes, seconds };
+}
+
+function addLeadingZero(value) {
+  return String(value).padStart(2, '0');
 }
