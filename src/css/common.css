@@ -44,7 +44,7 @@ button {
 }
 
 .field:not(:last-child) {
-  margin-right: 43px;
+  margin-right: 25px;
 }
 
 .value {
