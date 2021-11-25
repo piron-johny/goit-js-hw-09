@@ -2,7 +2,7 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import 'flatpickr/dist/flatpickr.min.css';
 
 const form = document.querySelector('.form');
-const delayInp = document.querySelector('input[name=delay]');
+const delay = document.querySelector('input[name=delay]');
 const step = document.querySelector('input[name=step]');
 const amount = document.querySelector('input[name=amount]');
 const submitBtn = form.querySelector('button');
