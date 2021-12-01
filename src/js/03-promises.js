@@ -26,17 +26,11 @@ function onClickSubmit(e) {
     if (counterPromise === 1) {
       delayCount = +delayInput.value;
     }
-
     if (counterPromise === +amount.value) {
       clearInterval(stepTimer);
     }
-
-    console.log('count', counterPromise);
-    console.log('del', delayCount);
-
     createPromise(counterPromise, delayCount)
       .then(({ position, delay }) => {
-
         Notify.success(`Fulfilled promise ${position} in ${delay}ms`);
       })
       .catch(({ position, delay }) => {
@@ -49,7 +43,6 @@ function onClickSubmit(e) {
 }
 
 function createPromise(position, delay) {
-
   return new Promise((resolve, reject) => {
     const shouldResolve = Math.random() > 0.3;
     setTimeout(() => {
